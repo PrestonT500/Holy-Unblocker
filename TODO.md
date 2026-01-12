@@ -2,7 +2,6 @@ This will be our nonexhaustive todo list for Holy Unblocker LTS v6.x.x and above
 
 ## Proxy/Site Functionality
 
-- [ ] Fix GeForce Now support
 - [ ] Update to use scramjetFrame instead of our own window handling
 - [ ] Implement wisp python to the project instead of the unreliable wisp-server-node
 - [ ] Add booksmark menu (source wise already present pretty much)
@@ -14,6 +13,7 @@ This will be our nonexhaustive todo list for Holy Unblocker LTS v6.x.x and above
 - [ ] Transport Options Swapping on Frame (Settings Menu doesn't swap)
 - [ ] Implement advanced data URI system
 - [ ] Allow custom Wisp urls from the settings menu (not config side)
+- [x] Fix GeForce Now support - done
 - [x] Swap to wisp-js over wisp-server-node for security and performance - done
 - [x] Fix keyword/descriptor randomisation - done
 - [x] Adapt Wisp protocol replacing bare which is very unsecure - done
