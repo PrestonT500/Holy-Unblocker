@@ -33,7 +33,7 @@ Also has a good amount of locally hosted games featured on the site.
 
 View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish to self host this project. Can't deploy using any of the free options? Check out Railway or look into cheap, paid VPS hosting solutions. If you don't wish to self-host join the discord for more official instance links that are restocked frequently.
 
-**Be sure to join Titanium Network's Discord for more official site links:** <a href="https://discord.gg/unblock">https://discord.gg/unblock</a>
+**Be sure to join TitaniumNetwork's Discord for more official site links:** <a href="https://discord.gg/unblock">https://discord.gg/unblock</a>
 
 <br>
 
@@ -494,7 +494,7 @@ Emerald :HuTaoHype:
 
 ## More Information
 
-This project is maintained by the InvisiProxy LTS team and is an official flagship Titanium Network web proxy site.
+This project is maintained by the InvisiProxy LTS team and is an official flagship TitaniumNetwork web proxy site.
 
 - <a href="https://github.com/titaniumnetwork-dev/">https://github.com/titaniumnetwork-dev/</a>
 - <a href="https://titaniumnetwork.org/">https://titaniumnetwork.org/</a>

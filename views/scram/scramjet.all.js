@@ -276,7 +276,7 @@ ${l}`}}if((0,n.U5)("rewriterLogs",r.base))for(let e of s.errors)console.error("o
             </li>
             <li>
               {{mask}}{{If the issue persists be sure to mention this in the
-              Titanium Network Discord.}}
+              TitaniumNetwork Discord.}}
             </li>
           </ul>
         </div>

@@ -29,7 +29,7 @@
     "node.js",
     "unblocker"
   ],
-  "author": "Titanium Network",
+  "author": "TitaniumNetwork",
   "license": "GNU AFFERO",
   "dependencies": {
     "@fastify/helmet": "^13.0.2",
