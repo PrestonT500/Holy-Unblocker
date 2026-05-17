@@ -24,7 +24,7 @@ console.log(serverUrl);
 const wisp = new Mrrowisp({
   port: 6001,
   allowUDP: false,
-  allowLoopbackIPs: false,
+  allowLoopbackIPs: true,
   whitelist: {
     ports: [80, 443, 9050, 7000, 7001],
   },
@@ -351,6 +351,7 @@ app.addHook('onSend', (request, reply, payload, done) => {
 
 app.listen({ port: serverUrl.port, host: serverUrl.hostname });
 console.log(`InvisiProxy is listening on port ${serverUrl.port}.`);
+console.log(`When hosting with a reverse proxy please ensure you are using NGINX only.\nCaddy and Apache have security risks due to wisp-js and loopbacks. Please configure them correctly.\nNGINX is recommended and used for production. Ports are whitelisted and security is maintained with NGINX only.`);
 if (config.disguiseFiles)
   console.log(
     'disguiseFiles is enabled. Visit src/routes.mjs to see the entry point, listed within the pages variable.'
