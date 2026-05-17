@@ -24,7 +24,7 @@ console.log(serverUrl);
 const wisp = new Mrrowisp({
   port: 6001,
   allowUDP: false,
-  allowLoopbackIPs: true,
+  allowLoopbackIPs: false,
   whitelist: {
     ports: [80, 443, 9050, 7000, 7001],
   },
