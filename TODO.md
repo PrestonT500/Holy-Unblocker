@@ -9,6 +9,7 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v6.x.x and above. R
 - [ ] Implement multi-lang support!
 
 ## Proxy/Site Functionality
+- [ ] Implement wisp python to the project instead of the unreliable wisp-server-node
 - [ ] Add booksmark menu (source wise already present pretty much)
 - [ ] Add Chii + ensuring users can access devtools while browsing - partial
 - [ ] Omnibox should state what the current site the user is on like a proper URL bar 
@@ -16,7 +17,6 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v6.x.x and above. R
 - [ ] Implement advanced data URI system
 - [ ] Allow custom Wisp urls from the settings menu (not config side)
 - [ ] Setting to open multiple stealth frames; basically about:blank but using our system. Pops out in another tab
-- [x] Swap to mrrowisp over wisp-js for performance - done
 - [x] Hide local browser history on launch - done
 - [x] Setting to open about:blank and blob frames - done
 - [x] Transport Options Swapping on Frame (Settings Menu doesn't swap) - done
