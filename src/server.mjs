@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import { createServer } from 'node:http';
-import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
+import { Mrrowisp } from "mrrowisp";
 import createRammerhead from '../lib/rammerhead/src/server/index.js';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyStatic from '@fastify/static';
@@ -21,29 +21,40 @@ import { existsSync, unlinkSync } from 'node:fs';
  */
 console.log(serverUrl);
 
-// Wisp Configuration: Refer to the documentation at https://www.npmjs.com/package/@mercuryworkshop/wisp-js
+const wisp = new Mrrowisp({
+  port: 6001,
+  allowUDP: false,
+  allowLoopbackIPs: true,
+  whitelist: {
+    ports: [80, 443, 9050, 7000, 7001],
+  },
+  tcpBufferSize: 65535,
+  streamLimitPerHost: 256,
+  streamLimitTotal: 8192,
+  dnsTTLSeconds: 300,
+  dnsMethod: "resolve",
+  dnsResultOrder: "ipv4first",
+  enableV2: true,
+  bandwidthLimitKbps: 51200,
+  connectionsLimitPerIP: 100,
+  connectionWindowSeconds: 10,
+  maxMessageSize: 262144,
+  writeTimeoutSeconds: 30,
+  frameReadTimeoutSeconds: 60,
+  banDurationSeconds: 86400,
+  banMaxStrikes: 5,
+  banEscalationMultiplier: 2,
+  maxHandshakeFailures: 20,
+  maxPacketRate: 2000,
+  maxConnectionLifetimeSeconds: 7200,
+  maxStreamsPerConnection: 256,
+  maxConnectionsPerIP: 100,
+  globalMaxConnections: 10000,
+  writeQueueSize: 16384,
+  maxInboundBytesPerSecond: 10485760,
+});
 
-logging.set_level(logging.NONE);
-wisp.options.allow_udp_streams = false;
-wisp.options.allow_loopback_ips = true;
-
-// For security reasons only allow these ports. Any additional regional proxies or default sandboxed Tor ports should be added here.
-wisp.options.port_whitelist = [
-  80,
-  443,
-  9050,
-  7000,
-  7001
-];
-
-wisp.options.port_blacklist = [
-  [6881, 6889],
-  6969,
-  1337,
-  [6969, 6969], 
-  51413,
-  [49152, 65535]
-];
+wisp.start();
 
 // The server will check for the existence of this file when a shutdown is requested.
 // The shutdown script in run-command.js will temporarily produce this file.
@@ -69,8 +80,8 @@ const rammerheadScopes = [
 ].map((pathname) => pathname.replace('/', serverUrl.pathname));
 
 const rammerheadSession = new RegExp(
-    `^${serverUrl.pathname.replaceAll('.', '\\.')}[a-z0-9]{32}`
-  ),
+  `^${serverUrl.pathname.replaceAll('.', '\\.')}[a-z0-9]{32}`
+),
   shouldRouteRh = (req) => {
     try {
       const url = new URL(req.url, serverUrl);
@@ -101,7 +112,7 @@ const serverFactory = (handler) => {
     .on('upgrade', (req, socket, head) => {
       if (shouldRouteRh(req)) routeRhUpgrade(req, socket, head);
       else if (req.url.endsWith(getAltPrefix('wisp', serverUrl.pathname)))
-        wisp.routeRequest(req, socket, head);
+        wisp.route(req, socket, head);
     });
 };
 
@@ -184,17 +195,17 @@ app.register(fastifyStatic, {
  */
 
 const supportedTypes = {
-    default: config.disguiseFiles ? 'image/vnd.microsoft.icon' : 'text/html',
-    html: 'text/html',
-    txt: 'text/plain',
-    xml: 'application/xml',
-    ico: 'image/vnd.microsoft.icon',
-  },
+  default: config.disguiseFiles ? 'image/vnd.microsoft.icon' : 'text/html',
+  html: 'text/html',
+  txt: 'text/plain',
+  xml: 'application/xml',
+  ico: 'image/vnd.microsoft.icon',
+},
   disguise = 'ico';
 
 if (config.disguiseFiles) {
   const getActualPath = (path) =>
-      path.slice(0, path.length - 1 - disguise.length),
+    path.slice(0, path.length - 1 - disguise.length),
     shouldNotHandle = new RegExp(`\\.(?!html$|${disguise}$)[\\w-]+$`, 'i'),
     loaderFile = tryReadFile(
       '../views/dist/pages/misc/deobf/loader.html',
@@ -202,15 +213,15 @@ if (config.disguiseFiles) {
       false
     );
   let exemptDirs = [
-      'assets',
-      'uv',
-      'scram',
-      'epoxy',
-      'libcurl',
-      'baremux',
-      'wisp',
-      'chii',
-    ].map((dir) => getAltPrefix(dir, serverUrl.pathname).slice(1, -1)),
+    'assets',
+    'uv',
+    'scram',
+    'epoxy',
+    'libcurl',
+    'baremux',
+    'wisp',
+    'chii',
+  ].map((dir) => getAltPrefix(dir, serverUrl.pathname).slice(1, -1)),
     exemptPages = ['login', 'test-shutdown', 'favicon.ico'];
   for (const [key, value] of Object.entries(externalPages))
     if ('string' === typeof value) exemptPages.push(key);
@@ -281,6 +292,7 @@ app.get(serverUrl.pathname + ':path', (req, reply) => {
   // is present, gracefully shut the server down.
   if (reqPath === 'test-shutdown' && existsSync(shutdown)) {
     console.log('InvisiProxy is shutting down.');
+    wisp.stop();
     app.close();
     unlinkSync(shutdown);
     process.exitCode = 0;
