@@ -166,7 +166,7 @@ npm run test
 
 This website is hosted locally with Scramjet, Ultraviolet (Wisp, Bare-Mux, EpoxyTransport, CurlTransport) and Rammerhead built-in.
 
-### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to wisp-js using loopbacks.
+### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to mrrowisp using loopbacks.
 
 #### Detailed Setup (Ubuntu Example)
 You will need `Node.js 20.x`, `curl` and `git` installed; below is an example for Debian/Ubuntu setup.
