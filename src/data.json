@@ -91,5 +91,5 @@
   "splash": [
     "{{mask}}{{This version is the public build of the Invisi LTS project, and it's being worked on via the master branch! Stuff will NOT work!}}"
   ],
-  "version": ["6.9.7"]
+  "version": ["6.9.8"]
 }
