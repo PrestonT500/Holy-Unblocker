@@ -106,6 +106,7 @@ let externalPages = {
   'titaniumnetwork-discord': 'https://discord.gg/CwWpdGkuWY',
   'truffled': 'https://truffled.lol',
   'rammerhead-discord': 'https://discord.gg/VNT4E7gN5Y',
+  'freedomproject': 'https://0xdc.icu',
 };
 
 // Override the route names below when usingSEO is disabled in config.json.
