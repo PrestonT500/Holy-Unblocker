@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import { createServer } from 'node:http';
-import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
+import { Mrrowisp } from "mrrowisp";
 import createRammerhead from '../lib/rammerhead/src/server/index.js';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyStatic from '@fastify/static';
@@ -21,29 +21,87 @@ import { existsSync, unlinkSync } from 'node:fs';
  */
 console.log(serverUrl);
 
-// Wisp Configuration: Refer to the documentation at https://www.npmjs.com/package/@mercuryworkshop/wisp-js
+// Wisp Configuration: Refer to the documentation at https://www.npmjs.com/package/mrrowisp
 
-logging.set_level(logging.NONE);
-wisp.options.allow_udp_streams = false;
-wisp.options.allow_loopback_ips = true;
+const wisp = new Mrrowisp({
+  port: 6001,
+  logLevel: 'info',
 
-// For security reasons only allow these ports. Any additional regional proxies or default sandboxed Tor ports should be added here.
-wisp.options.port_whitelist = [
-  80,
-  443,
-  9050,
-  7000,
-  7001
-];
+  allowTCP: true,
+  allowUDP: false,
+  enableV2: true,
+  enableTwisp: false,
+  websocketPermessageDeflate: false,
 
-wisp.options.port_blacklist = [
-  [6881, 6889],
-  6969,
-  1337,
-  [6969, 6969], 
-  51413,
-  [49152, 65535]
-];
+  allowDirectIP: true,
+  allowPrivateIPs: false,
+  allowLoopbackIPs: true,
+
+  parseRealIP: true,
+  trustedHeaders: ['CF-Connecting-IP', 'X-Forwarded-For'],
+
+  whitelist: {
+    hostnames: [],
+    ports: [
+      80,
+      443,
+      9050,
+      7000,
+      7001
+    ],
+  },
+
+  connectionsLimitPerIP: 32,
+  connectionWindowSeconds: 10,
+  tcpBufferSize: 65535,
+  bufferRemainingLength: 65536,
+  tcpNoDelay: true,
+  maxMessageSize: 4 * 1024 * 1024,
+
+  passwordAuth: false,
+
+  floodProtection: {
+    enabled: true,
+    maxConnectsPerSourceIPPerSecond: 25,
+    maxConnectsPerDestPerSecond: 64,
+    maxConnectsPerDestPerMinute: 600,
+    maxInFlightSyns: 192,
+    maxConcurrentStreamsPerConnection: 128,
+    maxConcurrentConnections: 768,
+    synFloodSignature: {
+      enabled: true,
+      windowMs: 2000,
+      minSamples: 24,
+      failedHandshakeRatio: 0.7,
+    },
+    wsCloseAfterViolations: 8,
+    logBlockedDials: true,
+  },
+
+  reputation: {
+    enabled: true,
+    storePath: './data/mrrowisp-reputation.json',
+    saveIntervalSeconds: 30,
+    scoreDecayPerHour: 2,
+    evictAfterDays: 7,
+    thresholds: { warn: 25, throttle: 55, strict: 85 },
+    weights: {
+      privateEgress: 20,
+      synSignature: 25,
+      twispNoAuth: 40,
+      burstRate: 5,
+      successfulStream: -2,
+      requestKnownBadDest: 3,
+    },
+    destinationWeights: {
+      privateEgress: 25,
+      synSignature: 30,
+      distinctSourcesEscalation: 1,
+    },
+  },
+});
+
+wisp.start(4);
 
 // The server will check for the existence of this file when a shutdown is requested.
 // The shutdown script in run-command.js will temporarily produce this file.
@@ -101,7 +159,7 @@ const serverFactory = (handler) => {
     .on('upgrade', (req, socket, head) => {
       if (shouldRouteRh(req)) routeRhUpgrade(req, socket, head);
       else if (req.url.endsWith(getAltPrefix('wisp', serverUrl.pathname)))
-        wisp.routeRequest(req, socket, head);
+        wisp.route(req, socket, head);
     });
 };
 
@@ -281,6 +339,7 @@ app.get(serverUrl.pathname + ':path', (req, reply) => {
   // is present, gracefully shut the server down.
   if (reqPath === 'test-shutdown' && existsSync(shutdown)) {
     console.log('InvisiProxy is shutting down.');
+    wisp.stop();
     app.close();
     unlinkSync(shutdown);
     process.exitCode = 0;
@@ -339,7 +398,7 @@ app.addHook('onSend', (request, reply, payload, done) => {
 
 app.listen({ port: serverUrl.port, host: serverUrl.hostname });
 console.log(`InvisiProxy is listening on port ${serverUrl.port}.`);
-console.log(`When hosting with a reverse proxy please ensure you are using NGINX only.\nCaddy and Apache have security risks due to wisp-js and loopbacks. Please configure them correctly.\nNGINX is recommended and used for production. Ports are whitelisted and security is maintained with NGINX only.`);
+console.log(`When hosting with a reverse proxy please ensure you are using NGINX only.\nCaddy and Apache have security risks due to mrrowisp and loopbacks. Please configure them correctly.\nNGINX is recommended and used for production. Ports are whitelisted and security is maintained with NGINX only.`);
 if (config.disguiseFiles)
   console.log(
     'disguiseFiles is enabled. Visit src/routes.mjs to see the entry point, listed within the pages variable.'
