@@ -25,7 +25,7 @@ console.log(serverUrl);
 
 const wisp = new Mrrowisp({
   port: 6001,
-  logLevel: 'info',
+  logLevel: 'none',
 
   allowTCP: true,
   allowUDP: false,
@@ -51,30 +51,44 @@ const wisp = new Mrrowisp({
     ],
   },
 
-  connectionsLimitPerIP: 32,
+  blacklist: {
+    hostnames: [],
+    ports: [
+      6881, 
+      6889,
+      6969,
+      1337,
+      6969, 
+      51413,
+      49152, 
+      65535
+    ],
+  },
+
+  connectionsLimitPerIP: 64,
   connectionWindowSeconds: 10,
-  tcpBufferSize: 65535,
-  bufferRemainingLength: 65536,
+  tcpBufferSize: 458752,
+  bufferRemainingLength: 458752,
   tcpNoDelay: true,
-  maxMessageSize: 4 * 1024 * 1024,
+  maxMessageSize: 28 * 1024 * 1024,
 
   passwordAuth: false,
 
   floodProtection: {
     enabled: true,
-    maxConnectsPerSourceIPPerSecond: 25,
-    maxConnectsPerDestPerSecond: 64,
-    maxConnectsPerDestPerMinute: 600,
-    maxInFlightSyns: 192,
-    maxConcurrentStreamsPerConnection: 128,
-    maxConcurrentConnections: 768,
+    maxConnectsPerSourceIPPerSecond: 60,
+    maxConnectsPerDestPerSecond: 150,
+    maxConnectsPerDestPerMinute: 3000,
+    maxInFlightSyns: 768,
+    maxConcurrentStreamsPerConnection: 1024,
+    maxConcurrentConnections: 6144, 
     synFloodSignature: {
       enabled: true,
-      windowMs: 2000,
-      minSamples: 24,
-      failedHandshakeRatio: 0.7,
+      windowMs: 3000,
+      minSamples: 40,
+      failedHandshakeRatio: 0.75,
     },
-    wsCloseAfterViolations: 8,
+    wsCloseAfterViolations: 16,
     logBlockedDials: true,
   },
 
@@ -101,7 +115,7 @@ const wisp = new Mrrowisp({
   },
 });
 
-wisp.start(4);
+wisp.start(2);
 
 // The server will check for the existence of this file when a shutdown is requested.
 // The shutdown script in run-command.js will temporarily produce this file.
