@@ -107,6 +107,7 @@ let externalPages = {
   'truffled': 'https://truffled.lol',
   'rammerhead-discord': 'https://discord.gg/VNT4E7gN5Y',
   'freedomproject': 'https://0xdc.icu',
+  'mrrowisp': 'https://github.com/soap-phia/mrrowisp',
 };
 
 // Override the route names below when usingSEO is disabled in config.json.
@@ -142,6 +143,8 @@ let altPaths = {
   'titaniumnetwork-discord': 'social',
   'truffled': 'educational',
   'rammerhead-discord': 'rdis',
+  'freedomproject': 'frpu',
+  'mrrowisp': 'mrw',
   /* Raw File Names */
   files: {
     'scramjet.all.js': 'working.all.js',

@@ -159,8 +159,8 @@
         // Display the loading screen if statusObject.isLoading is true.
         loader.classList.toggle('loader-active', statusObject.isLoading);
 
-        // Remove the loading screen if it takes longer than 5 seconds.
-        if (statusObject.isLoading) loaderTimeout(5000);
+        // Remove the loading screen if it takes longer than 10 seconds.
+        if (statusObject.isLoading) loaderTimeout(10000);
       };
 
       // Reattach load events whenever the content window has changed.
@@ -168,7 +168,7 @@
         setTimeout(() => {
           windowFrame.contentWindow.addEventListener('beforeunload', () => {
             loader.classList.toggle('loader-active', true);
-            loaderTimeout(3000);
+            loaderTimeout(5000);
           });
           windowFrame.contentWindow.addEventListener('unload', loadHandler);
           windowFrame.contentWindow.addEventListener(
