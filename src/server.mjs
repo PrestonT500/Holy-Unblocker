@@ -1,7 +1,6 @@
 import Fastify from 'fastify';
 import { createServer } from 'node:http';
 import { Mrrowisp } from "mrrowisp";
-import createRammerhead from '../lib/rammerhead/src/server/index.js';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyStatic from '@fastify/static';
 import {
@@ -121,58 +120,14 @@ wisp.start(2);
 // The shutdown script in run-command.js will temporarily produce this file.
 const shutdown = fileURLToPath(new URL('./.shutdown', import.meta.url));
 
-const rh = createRammerhead();
-const rammerheadScopes = [
-  '/rammerhead.js',
-  '/hammerhead.js',
-  '/transport-worker.js',
-  '/task.js',
-  '/iframe-task.js',
-  '/worker-hammerhead.js',
-  '/messaging',
-  '/sessionexists',
-  '/deletesession',
-  '/newsession',
-  '/editsession',
-  '/needpassword',
-  '/syncLocalStorage',
-  '/api/shuffleDict',
-  '/mainport',
-].map((pathname) => pathname.replace('/', serverUrl.pathname));
-
-const rammerheadSession = new RegExp(
-    `^${serverUrl.pathname.replaceAll('.', '\\.')}[a-z0-9]{32}`
-  ),
-  shouldRouteRh = (req) => {
-    try {
-      const url = new URL(req.url, serverUrl);
-      return (
-        rammerheadScopes.includes(url.pathname) ||
-        rammerheadSession.test(url.pathname)
-      );
-    } catch (e) {
-      return false;
-    }
-  },
-  routeRhRequest = (req, res) => {
-    req.url = req.url.slice(serverUrl.pathname.length - 1);
-    rh.emit('request', req, res);
-  },
-  routeRhUpgrade = (req, socket, head) => {
-    req.url = req.url.slice(serverUrl.pathname.length - 1);
-    rh.emit('upgrade', req, socket, head);
-  };
-
-// Create a server factory for Rammerhead and Wisp
+// Create a server factory for Wisp
 const serverFactory = (handler) => {
   return createServer()
     .on('request', (req, res) => {
-      if (shouldRouteRh(req)) routeRhRequest(req, res);
-      else handler(req, res);
+      handler(req, res);
     })
     .on('upgrade', (req, socket, head) => {
-      if (shouldRouteRh(req)) routeRhUpgrade(req, socket, head);
-      else if (req.url.endsWith(getAltPrefix('wisp', serverUrl.pathname)))
+      if (req.url.endsWith(getAltPrefix('wisp', serverUrl.pathname)))
         wisp.route(req, socket, head);
     });
 };
@@ -287,8 +242,6 @@ if (config.disguiseFiles) {
   for (const [key, value] of Object.entries(externalPages))
     if ('string' === typeof value) exemptPages.push(key);
     else exemptDirs.push(key);
-  for (const path of rammerheadScopes)
-    if (!shouldNotHandle.test(path)) exemptDirs.push(path.slice(1));
   exemptPages = exemptPages.concat(exemptDirs);
   if (pages.default === 'login') exemptPages.push('');
 
@@ -300,8 +253,7 @@ if (config.disguiseFiles) {
     if (
       shouldNotHandle.test(reqPath) ||
       exemptDirs.some((dir) => reqPath.indexOf(dir + '/') === 0) ||
-      exemptPages.includes(reqPath) ||
-      rammerheadSession.test(serverUrl.pathname + reqPath)
+      exemptPages.includes(reqPath)
     )
       return done();
 

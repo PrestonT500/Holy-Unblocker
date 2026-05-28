@@ -26,8 +26,7 @@ const getDomain = () =>
   },
   /* Used to set functions for the goProx object at the bottom.
    * See the goProx object at the bottom for some usage examples
-   * on the URL handlers, omnibox functions, and the uvUrl and
-   * RammerheadEncode functions.
+   * on the URL handlers, omnibox functions, and the uvUrl function.
    */
   urlHandler = (parser) =>
     typeof parser === 'function'
@@ -170,44 +169,6 @@ const requestAC = async (
       });
       break;
     }
-    case rhUrl: {
-      // Have Rammerhead process the autocomplete request.
-      const response = await fetch(
-          await parserFunc(baseUrl + encodeURIComponent(query))
-        ),
-        responseType = response.headers.get('content-type');
-      let responseJSON = {};
-      if (responseType && responseType.indexOf('application/json') !== -1)
-        responseJSON = await response.json();
-      else
-        try {
-          responseJSON = await response.text();
-          try {
-            responseJSON = responseJSON.match(
-              /(?<=\/\*hammerhead\|.*header-end\*\/)[^]+?(?=\/\*hammerhead\|.*end\*\/)/i
-            )[0];
-          } catch (e) {
-            // In case Rammerhead chose not to encode the response.
-          }
-          try {
-            responseJSON = JSON.parse(responseJSON);
-          } catch (e) {
-            responseJSON = JSON.parse(
-              responseJSON.replace(/^[^[{]*|[^\]}]*$/g, '')
-            );
-          }
-        } catch (e) {
-          // responseJSON will be an empty object if everything was invalid.
-        }
-
-      // Update the autocomplete results directly.
-      updateAC(
-        params.prAC,
-        responseHandlers[params.searchType](responseJSON),
-        Date.parse(params.time)
-      );
-      break;
-    }
   }
 };
 
@@ -283,243 +244,7 @@ const getSearchTemplate = (
       url = search(url);
     }
     return url;
-  },
-  rhUrl = async (url) =>
-    location.origin + (await RammerheadEncode(search(url)));
-
-/* RAMMERHEAD CONFIGURATION */
-
-// Store the search autocomplete string shuffler until reloaded.
-// The ID must be a string containing 32 alphanumerical characters.
-let rhACDict = { id: 'collectsearchautocompleteresults', dict: '' };
-
-// Parse a URL to use with Rammerhead. Only usable if the server is active.
-const RammerheadEncode = async (baseUrl) => {
-  // Hellhead
-  const mod = (n, m) => ((n % m) + m) % m,
-    baseDictionary =
-      '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~-',
-    shuffledIndicator = '_rhs',
-    // Return a copy of the base dictionary with a randomized character order.
-    // Will be used as a Caesar cipher for URL encoding.
-    generateDictionary = () => {
-      let str = '';
-      const split = baseDictionary.split('');
-      while (split.length > 0) {
-        // Using .splice automatically rounds down to the nearest whole number.
-        str += split.splice(Math.random() * split.length, 1)[0];
-      }
-      return str;
-    };
-
-  class StrShuffler {
-    constructor(dictionary = generateDictionary()) {
-      this.dictionary = dictionary;
-    }
-
-    shuffle(str) {
-      // Do not reshuffle an already shuffled string.
-      if (!str.indexOf(shuffledIndicator)) return str;
-
-      let shuffledStr = '';
-      for (let i = 0; i < str.length; i++) {
-        const char = str[i],
-          idx = baseDictionary.indexOf(char);
-
-        /* For URL encoded characters and characters not included in the
-         * dictionary, leave untouched. Otherwise, replace with a character
-         * from the dictionary.
-         */
-        if (char === '%' && str.length - i >= 3)
-          // A % symbol denotes that the next 2 characters are URL encoded.
-          shuffledStr += char + str[++i] + str[++i];
-        // Do not modify unrecognized characters.
-        else if (idx == -1) shuffledStr += char;
-        // Find the corresponding dictionary entry and use the character
-        // that is i places to the right of it.
-        else
-          shuffledStr += this.dictionary[mod(idx + i, baseDictionary.length)];
-      }
-      // Add a prefix signifying that the string has been shuffled.
-      return shuffledIndicator + shuffledStr;
-    }
-
-    // Unshuffling is currently not done on the client side, and likely
-    // won't ever be for this implementation. It is used by the server instead.
-    unshuffle(str) {
-      // Do not unshuffle an already unshuffled string.
-      if (str.indexOf(shuffledIndicator)) return str;
-
-      // Remove the prefix signifying that the string has been shuffled.
-      str = str.slice(shuffledIndicator.length);
-
-      let unshuffledStr = '';
-      for (let i = 0; i < str.length; i++) {
-        const char = str[i],
-          idx = this.dictionary.indexOf(char);
-
-        /* Convert the dictionary entry characters back into their base
-         * characters using the base dictionary. Again, leave URL encoded
-         * characters and unrecognized symbols alone.
-         */
-        if (char === '%' && str.length - i >= 3)
-          unshuffledStr += char + str[++i] + str[++i];
-        else if (idx == -1) unshuffledStr += char;
-        // Find the corresponding base character entry and use the character
-        // that is i places to the left of it.
-        else
-          unshuffledStr += baseDictionary[mod(idx - i, baseDictionary.length)];
-      }
-      return unshuffledStr;
-    }
   }
-
-  // Request information that's beiing stored elsewhere on the server.
-  // Executes the callback function if the server responds as intended.
-  const get = (url, callback, shush = false) => {
-      let request = new XMLHttpRequest();
-      request.open('GET', url, true);
-      request.send();
-
-      request.onerror = () => {
-        if (!shush) console.log('Cannot communicate with the server');
-      };
-      request.onload = () => {
-        if (request.status === 200) callback(request.responseText);
-        else if (!shush)
-          console.log(
-            `Unexpected server response to not match "200". Server says "${request.responseText}"`
-          );
-      };
-    },
-    // Functions for interacting with Rammerhead backend code on the server.
-    api = {
-      // Make a new Rammerhead session and do something with it.
-      newsession(callback) {
-        get('{{route}}{{/newsession}}', callback);
-      },
-
-      // Check if a session with the specified ID exists, then do something.
-      sessionexists(id, callback) {
-        get(
-          '{{route}}{{/sessionexists}}?id=' + encodeURIComponent(id),
-          (res) => {
-            if (res === 'exists') return callback(true);
-            if (res === 'not found') return callback(false);
-            console.log('Unexpected response from server. Received ' + res);
-          }
-        );
-      },
-
-      // Request a brand new encoding table to use for Rammerhead.
-      shuffleDict(id, callback) {
-        console.log('Shuffling', id);
-        get(
-          '{{route}}{{/api/shuffleDict}}?id=' + encodeURIComponent(id),
-          (res) => {
-            callback(JSON.parse(res));
-          }
-        );
-      },
-    },
-    /* Organize Rammerhead sessions via the browser's local storage.
-     * Local data consists of session creation timestamps and session IDs.
-     * The rest of the data is stored on the server.
-     */
-    localStorageKey = 'rammerhead_sessionids',
-    localStorageKeyDefault = 'rammerhead_default_sessionid',
-    sessionIdsStore = {
-      // Get the local data of all stored sessions.
-      get() {
-        const rawData = localStorage.getItem(localStorageKey);
-        if (!rawData) return [];
-        try {
-          const data = JSON.parse(rawData);
-
-          // Catch invalidly stored Rammerhead session data. Either that or
-          // it's poorly spoofed.
-          if (!Array.isArray(data)) throw 'getout';
-          return data;
-        } catch (e) {
-          return [];
-        }
-      },
-
-      // Store local Rammerhead session data in the form of an array.
-      set(data) {
-        if (!Array.isArray(data)) throw new TypeError('Must be an array.');
-        localStorage.setItem(localStorageKey, JSON.stringify(data));
-      },
-
-      // Get the default session data.
-      getDefault() {
-        const sessionId = localStorage.getItem(localStorageKeyDefault);
-        if (sessionId) {
-          let data = sessionIdsStore.get();
-          data.filter((session) => session.id === sessionId);
-          if (data.length) return data[0];
-        }
-        return null;
-      },
-
-      // Set a new default session based on a given session ID.
-      setDefault(id) {
-        localStorage.setItem(localStorageKeyDefault, id);
-      },
-    },
-    // Store or update local data for a Rammerhead session, which consists of
-    // the session's ID and when the session was last created.
-    addSession = (id) => {
-      let data = sessionIdsStore.get();
-      data.unshift({ id: id, createdOn: new Date().toLocaleString() });
-      sessionIdsStore.set(data);
-    },
-    // Attempt to load an existing session that has been stored on the server.
-    getSessionId = (baseUrl) => {
-      return new Promise((resolve) => {
-        for (let i = 0; i < autocompleteUrls.length; i++)
-          if (baseUrl.indexOf(autocompleteUrls[i]) === 0)
-            return resolve(rhACDict.id);
-        // Check if the browser has stored an existing session.
-        const id = localStorage.getItem('session-string');
-        api.sessionexists(id, (value) => {
-          // Create a new session if Rammerhead can't find an existing session.
-          if (!value) {
-            console.log('Session validation failed');
-            api.newsession((id) => {
-              addSession(id);
-              localStorage.setItem('session-string', id);
-              console.log(id);
-              console.log('^ new id');
-              resolve(id);
-            });
-          }
-          // Load the stored session now that Rammerhead has found it.
-          else resolve(id);
-        });
-      });
-    };
-
-  // Load the URL that was last visited in the Rammerhead session.
-  return getSessionId(baseUrl).then((id) => {
-    if (id === rhACDict.id && rhACDict.dict)
-      return new Promise((resolve) => {
-        resolve(
-          `{{route}}{{/}}${id}/` +
-            new StrShuffler(rhACDict.dict).shuffle(baseUrl)
-        );
-      });
-    return new Promise((resolve) => {
-      api.shuffleDict(id, (shuffleDict) => {
-        if (id === rhACDict.id) rhACDict.dict = shuffleDict;
-        // Encode the URL with Rammerhead's encoding table and return the URL.
-        resolve(
-          `{{route}}{{/}}${id}/` + new StrShuffler(shuffleDict).shuffle(baseUrl)
-        );
-      });
-    });
-  });
-};
 
 /* To use:
  * goProx.proxy(url-string, mode-as-string-or-number);
@@ -533,23 +258,16 @@ const RammerheadEncode = async (baseUrl) => {
  * goProx.ultraviolet("https://google.com", 1);
  * goProx.ultraviolet("https://google.com", "stealth");
  *
- * await goProx.rammerhead("https://google.com", 1);
- * await goProx.rammerhead("https://google.com", "stealth");
- *
  * goProx.searx(1);
  * goProx.searx("stealth");
  *
  * Window mode -
  * goProx.ultraviolet("https://google.com", "window");
  *
- * await goProx.rammerhead("https://google.com", "window");
- *
  * goProx.searx("window");
  *
  * Return string value mode (default) -
  * goProx.ultraviolet("https://google.com");
- *
- * await goProx.rammerhead("https://google.com");
  *
  * goProx.searx();
  */
@@ -569,8 +287,6 @@ const preparePage = async () => {
     ultraviolet: urlHandler(uvUrl),
 
     scramjet: urlHandler(sjUrl),
-
-    rammerhead: asyncUrlHandler(rhUrl),
 
     terraria: urlHandler(location.protocol + '//a.' + getDomain()),
 
@@ -685,7 +401,6 @@ const preparePage = async () => {
         globalDefault: 'window',
         ultraviolet: 'stealth',
         scramjet: 'stealth',
-        rammerhead: 'window',
       },
       searchMode = defaultModes[type] || defaultModes['globalDefault'];
 
@@ -751,19 +466,12 @@ const preparePage = async () => {
             let searchType = readStorage('SearchEngine');
             if (!(searchType in autocompletes)) searchType = defaultSearch;
             const requestTime = new Date().toUTCString();
-            if (sjLoaded) {
-              sjLoaded = false;
-              requestAC('https://' + autocompletes[searchType], query, sjUrl, {
-                searchType: searchType,
-                port: autocompleteChannel.port1,
-                time: requestTime,
-              });
-            } else
-              requestAC('https://' + autocompletes[searchType], query, rhUrl, {
-                searchType: searchType,
-                prAC: prAC,
-                time: requestTime,
-              });
+            sjLoaded = false;
+            requestAC('https://' + autocompletes[searchType], query, sjUrl, {
+              searchType: searchType,
+              port: autocompleteChannel.port1,
+              time: requestTime,
+            });
           }
         });
 
@@ -807,7 +515,6 @@ const preparePage = async () => {
 
   prSet('pr-uv', 'ultraviolet');
   prSet('pr-sj', 'scramjet');
-  prSet('pr-rh', 'rammerhead');
   prSet('pr-yt', 'youtube');
   prSet('pr-iv', 'invidious');
   prSet('pr-trl', 'tru');

@@ -159,30 +159,6 @@ const testCommonJSOnPage = async () => {
       return headers;
     };
 
-    const testRammerhead = async () => {
-      const omniboxId = 'pr-rh',
-        urlPath = 'example.com';
-      await page.goto('http://localhost:8080/physics');
-      const generatedUrl = await page.evaluate(generateUrl, omniboxId, urlPath);
-      const testResults = {};
-      testResults.rammerhead = generatedUrl;
-
-      console.log('Rammerhead test results:', testResults);
-
-      const headers = await getHeaders();
-      const rammerheadTestPassed =
-        testResults.rammerhead !== 'failure' &&
-        (await testGeneratedUrl(testResults.rammerhead, headers));
-
-      console.log(
-        `Rammerhead test result: ${
-          rammerheadTestPassed ? 'success' : 'failure'
-        }`
-      );
-
-      return rammerheadTestPassed;
-    };
-
     /*
 
                                                      xx   
@@ -314,13 +290,12 @@ xx                                                  xx
       return uvTestPassed;
     };
 
-    // Run tests for Rammerhead and Ultraviolet.
+    // Run tests for Ultraviolet.
     await page.goto('http://localhost:8080/');
-    const rammerheadPassed = await testRammerhead();
     const ultravioletPassed = await testUltraviolet();
 
-    if (rammerheadPassed && ultravioletPassed) {
-      console.log('Both tests passed.');
+    if (ultravioletPassed) {
+      console.log('Tests passed.');
       process.exitCode = 0;
     } else {
       console.error('Tests failed.');

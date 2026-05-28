@@ -276,31 +276,6 @@ commands: for (let i = 2; i < process.argv.length; i++)
       break;
     }
 
-    // Delete all files in target locations. This is primarily used to manage
-    // Rammerhead's cache output.
-    case 'clean': {
-      // If including Rammerhead sessions, be careful to not let the global
-      // autocomplete session be deleted without restarting the server.
-      const targetDirs = ['./lib/rammerhead/cache-js'];
-      for (const targetDir of targetDirs)
-        try {
-          const targetPath = fileURLToPath(new URL(targetDir, import.meta.url));
-          rmSync(targetPath, { force: true, recursive: true });
-          mkdirSync(targetPath);
-          writeFileSync(
-            fileURLToPath(new URL(targetDir + '/.gitkeep', import.meta.url)),
-            ''
-          );
-          console.log(
-            '[Clean]',
-            `Reset folder ${targetDir} at ${new Date().toISOString()}.`
-          );
-        } catch (e) {
-          console.error('[Clean Error]', e);
-        }
-      break;
-    }
-
     case 'format': {
       exec('npx prettier --write .', (error, stdout) => {
         if (error) {

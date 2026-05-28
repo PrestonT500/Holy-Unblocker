@@ -154,9 +154,6 @@ npm restart
 # For killing any production processes made with pm2
 npm run kill
 
-# For clearing respective Rammerhead cache
-npm run clean
-
 # If you encounter any build errors...
 npm run build
 
@@ -164,7 +161,7 @@ npm run build
 npm run test
 ```
 
-This website is hosted locally with Scramjet, Ultraviolet (Wisp, Bare-Mux, EpoxyTransport, CurlTransport) and Rammerhead built-in.
+This website is hosted locally with [Scramjet](https://github.com/MercuryWorkshop/Scramjet), [Ultraviolet](https://github.com/TitaniumNetwork-Dev/Ultraviolet), [Wisp](https://github.com/MercuryWorkshop/Wisp-Protocol), [Bare-Mux](https://github.com/MercuryWorkshop/Bare-Mux), [EpoxyTransport](https://github.com/MercuryWorkshop/Epoxy-Transport), and [LibcurlTransport](https://github.com/MercuryWorkshop/Libcurl-Transport) built-in.
 
 ### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to mrrowisp using loopbacks.
 
@@ -242,14 +239,12 @@ Resources for self-hosting:
 
 The default PORT for the proxy when started is `http://localhost:8080`. You can change the PORT and other production metrics if needed in `./ecosystem.config.js`. 
 
-The default PORT for Rammerhead is `3000`. You can change this <a href="https://github.com/QuiteAFancyEmerald/InvisiProxy/blob/8f6dcfedb71439a43a19cc0a015ee6ca7e29fd11/lib/rammerhead/holy-config.js#L9">here</a>.
-
 Every other localized changes for source randomization, auto-minify, etc. are located in `./config.json`.
 
 **config.json**
 - `minifyScripts`: Automatically minify respective static assets upon starting the server.
 - `randomizeIdentifiers`: Enable experimental proxy global randomization for Ultraviolet. This reduces the chances of UV being detected by any extension based filters.
-- `production`: Utilize a pre-configured production setup for server hosting. Automatically has cache control, session jobs for Rammerhead and source rewrites setup.
+- `production`: Utilize a pre-configured production setup for server hosting. Automatically has cache control and source rewrites setup.
 - `disguiseFiles`: Enable DOM masquerading which obfuscates real the real content fetches for InvisiLTS. This is done through disguising requests, decompressing and then reconstructing the DOM tree.
 - `usingSEO`: Enable Source Randomization which randomizes the source by swapping chunks of data specified in `./src/data.json`. Highly useful for masking keywords that will automatically flag or block InvisiProxy LTS as well as preventing source blocks.
 
@@ -293,7 +288,6 @@ The primary location for any client side navigation scripts is `./views/assets/j
 - `goFrame`: This specifies the stealth frame used for InvisiProxy LTS
 - `sx`: This constant specifies the search engine you want to be proxied whenever a user types something in that isn't a URL
 - `search/uvUrl/sjUrl`: These functions specify and parse the queries used for submitted URLs
-- `RammerheadEncode:` This constant is a dependency for Rammerhead parsing and querying
 - `urlHandler/asyncUrlHandler`: Used to set functions for the goProx object.
 - `goProx`: This constant allows for the mapping of URL handling for specific proxies, games or links that need to fall under a web proxy.
 
@@ -302,10 +296,6 @@ const goProx = Object.freeze({
   ultraviolet: urlHandler(uvUrl),
 
   scramjet: urlHandler(sjUrl),
-
-  rammerhead: asyncUrlHandler(
-    async (url) => location.origin + (await RammerheadEncode(search(url)))
-  ),
 
   // `location.protocol + "//" + getDomain()` more like `location.origin`
 
@@ -324,7 +314,6 @@ const goProx = Object.freeze({
 
 prSet('pr-uv', 'ultraviolet');
 prSet('pr-sj', 'scramjet');
-prSet('pr-rh', 'rammerhead');
 prSet('pr-yt', 'youtube');
 prSet('pr-example', 'example');
 ```
@@ -393,7 +382,7 @@ This is an example of DNS records. Self-hosting will require `A records` prefera
 - `@` and `www.example.com` are being used for InvisiProxy LTS.
 - `a.example.com` is being used for other instances like Libreddit, Invidious or web ported games depending on what the site maintainer needs.
 
-As stated previously, InvisiProxy is hosted locally with Scramjet, Ultraviolet and Rammerhead out of the box. No need for external instances.
+As stated previously, InvisiProxy is hosted locally with Scramjet and Ultraviolet out of the box. No need for external instances.
 
 #### Domain Steps
 
@@ -503,17 +492,15 @@ View the official website for more detail and credits.
 
 ### Web Proxy Sources:
 
-This project currently uses Scramjet and Ultraviolet as web proxies adhering to the Wisp protocol. Bare-Mux is utilized for swapping transport systems to be utilized with Wisp. The included transport systems are EpoxyTransport and libcurl-transport. Rammerhead is also provided as an additional web proxy option.
+This project currently uses Scramjet and Ultraviolet as web proxies adhering to the Wisp protocol. Bare-Mux is utilized for swapping transport systems to be utilized with Wisp. The included transport systems are EpoxyTransport and libcurl-transport.
 
 - <a href="https://github.com/soap-phia/mrrowisp">mrrowisp</a>
 - <a href="https://github.com/MercuryWorkshop/scramjet">Scramjet</a>
 - <a href="https://github.com/titaniumnetwork-dev/Ultraviolet">Ultraviolet</a>
-- <a href="https://github.com/MercuryWorkshop/wisp-server-node">Wisp-Server-Node</a>
-- <a href="https://github.com/MercuryWorkshop/wisp-server-python">Wisp-Server-Python</a>
-- <a href="https://github.com/MercuryWorkshop/EpoxyTransport">EpoxyTransport</a>
-- <a href="https://github.com/MercuryWorkshop/CurlTransport">libcurl-transport</a>
+- <a href="https://github.com/MercuryWorkshop/wisp-protocol">Wisp Protocol</a>
+- <a href="https://github.com/MercuryWorkshop/Epoxy-Transport">EpoxyTransport</a>
+- <a href="https://github.com/MercuryWorkshop/Libcurl-Transport">libcurl-transport</a>
 - <a href="https://github.com/MercuryWorkshop/bare-mux">Bare-Mux</a>
-- <a href="https://github.com/binary-person/rammerhead">Rammerhead</a>
 - <a href="https://gist.github.com/BinBashBanana/a1fd7345e2d86e69d5a532f16cbdbdaa">DetectorDetector</a>
 - <a href="https://gitlab.com/fp-production/fp">The Freedom Project (Hard Fork)</a>
 

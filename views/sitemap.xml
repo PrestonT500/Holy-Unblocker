@@ -30,12 +30,6 @@
         <changefreq>monthly</changefreq>
     </url>
     <url>
-        <loc>https://invisiproxy.com/rammerhead</loc>
-        <lastmod>2026-04-12T00:00:00+00:00</lastmod>
-        <priority>0.90</priority>
-        <changefreq>monthly</changefreq>
-    </url>
-    <url>
         <loc>https://invisiproxy.com/youtube</loc>
         <lastmod>2026-04-12T00:00:00+00:00</lastmod>
         <priority>0.85</priority>

@@ -8,7 +8,7 @@
     "node": "20.x"
   },
   "scripts": {
-    "fresh-install": "npm cache verify && npm update && npm ci && cd lib/rammerhead && npm ci",
+    "fresh-install": "npm cache verify && npm update && npm ci",
     "fresh-start": "npm run fresh-install && npm start",
     "start": "npm stop && npm run build && npm run manual-start",
     "restart": "node run-command.mjs stop start",
@@ -17,7 +17,7 @@
     "manual-start": "node run-command.mjs start",
     "kill": "node run-command.mjs stop kill",
     "fetch-adblock": "curl -o views/assets/txt/blacklist.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/pro.txt",
-    "build": "node run-command.mjs build && cd lib/rammerhead && npm run build",
+    "build": "node run-command.mjs build",
     "clear": "node run-command.mjs clean",
     "clean": "node run-command.mjs clean format",
     "proxy-validator": "node proxyServiceValidator.js",

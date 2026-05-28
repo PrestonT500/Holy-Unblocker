@@ -69,7 +69,6 @@ let pages = {
   scramjet: 'pages/proxnav/scramjet.html',
   uverror: 'pages/proxnav/ultraviolet-error.html',
   sjerror: 'pages/proxnav/scramjet-error.html',
-  rammerhead: 'pages/proxnav/rammerhead.html',
   /* Proxy Presets */
   youtube: 'pages/proxnav/preset/youtube.html',
   apps: 'pages/proxnav/preset/applications.html',
@@ -105,7 +104,6 @@ let externalPages = {
   'kofi': 'https://ko-fi.com/quiteafancyemerald',
   'titaniumnetwork-discord': 'https://discord.gg/CwWpdGkuWY',
   'truffled': 'https://truffled.lol',
-  'rammerhead-discord': 'https://discord.gg/VNT4E7gN5Y',
   'freedomproject': 'https://0xdc.icu',
   'mrrowisp': 'https://github.com/soap-phia/mrrowisp',
 };
@@ -120,7 +118,6 @@ let altPaths = {
   scramjet: 'working',
   uverror: 'network-error',
   sjerror: 'worker-error',
-  rammerhead: 'physics',
   youtube: 'wiki',
   partners: 'interface',
   apps: 'software',
@@ -142,7 +139,6 @@ let altPaths = {
   'tor-project': 'tr',
   'titaniumnetwork-discord': 'social',
   'truffled': 'educational',
-  'rammerhead-discord': 'rdis',
   'freedomproject': 'frpu',
   'mrrowisp': 'mrw',
   /* Raw File Names */
@@ -159,7 +155,6 @@ let altPaths = {
     'uv.sw.js': 'networking.sw.js',
     'uv.webp': 'nt.webp',
     'scramjet.webp': 'wr.webp',
-    'rammerhead.webp': 'physics.webp',
     'fastify.webp': 'fs.webp',
     'nordtheme.webp': 'nord.webp',
     'nodejs.webp': 'node.webp',
