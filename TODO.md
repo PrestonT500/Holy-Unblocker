@@ -16,6 +16,7 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v6.x.x and above. R
 - [ ] Implement advanced data URI system
 - [ ] Allow custom Wisp urls from the settings menu (not config side)
 - [ ] Setting to open multiple stealth frames; basically about:blank but using our system. Pops out in another tab
+- [x] Swap to pnpm and node 26
 - [x] Swap to mrrowisp over wisp-js for security and performance - done
 - [x] Hide local browser history on launch - done
 - [x] Setting to open about:blank and blob frames - done

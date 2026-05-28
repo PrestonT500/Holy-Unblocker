@@ -114,7 +114,7 @@ commands: for (let i = 2; i < process.argv.length; i++)
           console.log('[Stop]', stdout);
         });
       // Do not continue executing commands since the server was unable to be stopped.
-      // Mostly implemented to prevent duplicating Node instances with npm restart.
+      // Mostly implemented to prevent duplicating Node instances with pnpm restart.
       if (hasErrored) {
         process.exitCode = 1;
         break commands;

@@ -92,7 +92,7 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 - Select **New Codespaces** and look for _[USERNAME]/InvisiProxy_ on your account
 - Ensure the branch is set to `master` and the dev container configuration is set to **InvisiProxy LTS**
 - Select **Create Codespace** and allow the container to setup
-- Type `npm run fresh-install` and `npm start` in the terminal
+- Type `pnpm run fresh-install` and `pnpm start` in the terminal
 - Click "Make public" on the application popup, then access the deployed website via the ports tab.
 
 </details>
@@ -144,21 +144,21 @@ git clone https://github.com/QuiteAFancyEmerald/InvisiProxy.git
 cd InvisiProxy
 
 # Edit config.js and set production to true if you want to use pm2 (Allows for easier VPS hosting)
-npm run fresh-install
-npm run fetch-adblock
-npm start
+pnpm run fresh-install
+pnpm run fetch-adblock
+pnpm start
 
 # Or on subsequent uses...
-npm restart
+pnpm restart
 
 # For killing any production processes made with pm2
-npm run kill
+pnpm run kill
 
 # If you encounter any build errors...
-npm run build
+pnpm run build
 
 # If you encounter any service errors...
-npm run test
+pnpm run test
 ```
 
 This website is hosted locally with [Scramjet](https://github.com/MercuryWorkshop/Scramjet), [Ultraviolet](https://github.com/TitaniumNetwork-Dev/Ultraviolet), [Wisp](https://github.com/MercuryWorkshop/Wisp-Protocol), [Bare-Mux](https://github.com/MercuryWorkshop/Bare-Mux), [EpoxyTransport](https://github.com/MercuryWorkshop/Epoxy-Transport), and [LibcurlTransport](https://github.com/MercuryWorkshop/Libcurl-Transport) built-in.
@@ -214,7 +214,7 @@ Then run the respective process; if you have production set to true in the confi
 git clone https://github.com/QuiteAFancyEmerald/InvisiProxy.git
 cd InvisiProxy
 
-npm run fresh-start
+pnpm run fresh-start
 ```
 
 Then of course if you used NGINX or caddy please restart/reload it
@@ -413,18 +413,18 @@ git clone https://github.com/QuiteAFancyEmerald/InvisiProxy.git
 
 cd InvisiProxy
 
-npm run fresh-install
+pnpm run fresh-install
 
 # If you wish to start the project
 
-npm start
+pnpm start
 
 # For testing endpoints and errors
 
-npm run test
+pnpm run test
 ```
 
-Now simply add the folder you cloned this repo in in VSC. Then run `npm install`. I recommend that if you are releasing this publically on GitHub that you add a `.gitignore` in your root directory with the following exclusions:
+Now simply add the folder you cloned this repo in in VSC. Then run `pnpm install`. I recommend that if you are releasing this publically on GitHub that you add a `.gitignore` in your root directory with the following exclusions:
 
 ```
 node_modules
@@ -437,7 +437,7 @@ For an online IDE that you can use on your school computer and/or chromebook use
 - Make an account: `https://gitpod.io/`
 - Fork this repo and enter in this URL to setup your workspace: `https://gitpod.io#https://github.com/YourNameHere/InvisiProxy/`
 
-Use the same steps above by running `npm install` in your repository and adding a `.gitignore` in your root directory specifying to exclude `node_modules`.
+Use the same steps above by running `pnpm install` in your repository and adding a `.gitignore` in your root directory specifying to exclude `node_modules`.
 
 ## Detailed FAQ
 

@@ -5,7 +5,6 @@ node_modules
 .well-known
 views/archive
 ngrok.exe
-pnpm-lock.yaml
 debug.log
 views/dist/*
 src/.shutdown

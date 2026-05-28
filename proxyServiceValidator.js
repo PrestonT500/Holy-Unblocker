@@ -2,7 +2,7 @@
 // see if all InvisiProxy code is working properly (at least on an Ubuntu machine).
 
 const axios = require('axios');
-const puppeteer = require('puppeteer');
+const { chromium } = require('playwright');
 
 const testEndpoint = async (url) => {
   try {
@@ -14,7 +14,7 @@ const testEndpoint = async (url) => {
   }
 };
 
-const generateUrl = async (omniboxId, urlPath, errorPrefix = 'failure') => {
+const generateUrl = async ({ omniboxId, urlPath, errorPrefix = 'failure' }) => {
   // Wait for the document to load before getting the omnibox.
   await new Promise((resolve) => {
     const waitLonger = () => setTimeout(resolve, 5000);
@@ -138,16 +138,18 @@ const testServerResponse = async () => {
 };
 
 const testCommonJSOnPage = async () => {
-  const browser = await puppeteer.launch({
+  const browser = await chromium.launch({
     args: [
       '--enable-features=NetworkService',
       '--enable-features=ServiceWorker',
       '--enable-features=InsecureOrigins',
     ],
     headless: true,
+  });
+  const context = await browser.newContext({
     ignoreHTTPSErrors: true,
   });
-  const page = await browser.newPage();
+  const page = await context.newPage();
 
   try {
     const getHeaders = async () => {
@@ -204,15 +206,14 @@ xx                                                  xx
           title: 'Example Domain',
         });
       await page.goto('http://localhost:8080/networking');
-      const generatedUrl = await page.evaluate(
-        generateUrl,
+      const generatedUrl = await page.evaluate(generateUrl, {
         omniboxId,
-        website.path,
-        errorPrefix
-      );
+        urlPath: website.path,
+        errorPrefix,
+      });
 
       const testResults = await page.evaluate(
-        async (generatedUrl, pageTitle) => {
+        async ({ generatedUrl, pageTitle }) => {
           const results = [{}, {}];
 
           await new Promise((resolve) => {
@@ -273,9 +274,7 @@ xx                                                  xx
 
           return results;
         },
-        generatedUrl,
-        website.title,
-        errorPrefix
+        { generatedUrl, pageTitle: website.title }
       );
 
       console.log('Ultraviolet test results:', testResults[0]);
