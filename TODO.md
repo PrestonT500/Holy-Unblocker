@@ -4,8 +4,8 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v6.x.x and above. R
 
 - [ ] Class managling and DOM masquerading functionality to Scramjet (or stealth window) 
 - [ ] Font obfuscation middleware
-- [ ] Update to Scramjet V2.0.6
-- [ ] Update to use scramjetFrame instead of our own window handling
+- [ ] Update to Scramjet v2.0.67-alpha
+- [ ] Update to use scramjetFrame instead of our own window handling (or whatever 2.0.67-alpha requires)
 - [ ] Implement multi-lang support!
 
 ## Proxy/Site Functionality
