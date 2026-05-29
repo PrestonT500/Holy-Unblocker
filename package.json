@@ -5,7 +5,7 @@
   "description": "InvisiProxy LTS is a web proxy service that helps you access websites that may be blocked by your network, government or policy all within your browser with no download or setup.",
   "main": "backend.js",
   "scripts": {
-    "fresh-install": "pnpm store status && pnpm update && pnpm ci",
+    "fresh-install": "pnpm update && pnpm ci",
     "fresh-start": "pnpm run fresh-install && pnpm start",
     "start": "pnpm stop && pnpm run build && pnpm run manual-start",
     "restart": "node run-command.mjs stop start",
