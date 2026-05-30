@@ -89,7 +89,7 @@ const testServerResponse = async () => {
     'http://localhost:8080/questions',
     'http://localhost:8080/s',
     'http://localhost:8080/credits',
-    'http://localhost:8080/terms',
+    'http://localhost:8080/privacy',
     'http://localhost:8080/books', 
     'http://localhost:8080/dictionary', 
     'http://localhost:8080/catalogue', 
@@ -289,11 +289,104 @@ xx                                                  xx
       return uvTestPassed;
     };
 
-    // Run tests for Ultraviolet.
+    const testScramjet = async () => {
+      const omniboxId = 'pr-sj',
+        errorPrefix = 'failure',
+        // For the hacky URL test further below, use the URL page's EXACT title.
+        website = Object.freeze({
+          path: 'example.com',
+          title: 'Example Domain',
+        });
+      await page.goto('http://localhost:8080/working');
+      const generatedUrl = await page.evaluate(generateUrl, {
+        omniboxId,
+        urlPath: website.path,
+        errorPrefix,
+      });
+
+      const testResults = await page.evaluate(
+        async ({ generatedUrl, pageTitle }) => {
+          const results = [{}, {}];
+
+          await new Promise((resolve) => {
+            const waitForDocument = () => {
+                const waitLonger = () => setTimeout(resolve, 5000);
+                if (document.readyState === 'complete') waitLonger();
+                else window.addEventListener('load', waitLonger);
+              },
+              // Wait until a service worker is registered before continuing.
+              // Also check again to make sure the document is loaded.
+              waitForWorker = async () => {
+                setTimeout(async () => {
+                  (await navigator.serviceWorker.getRegistrations()).length > 0
+                    ? waitForDocument()
+                    : waitForWorker();
+                }, 1000);
+              };
+
+            waitForWorker();
+          });
+
+          try {
+            results[0].scramjet = generatedUrl;
+
+            // Test to see if the document title for example.com has loaded,
+            // by appending an IFrame to the document and grabbing its content.
+            const testGeneratedUrlHacky = async (url) => {
+              const exampleIFrame = document.createElement('iframe');
+              const waitForDocument = new Promise((resolve) => {
+                document.documentElement.appendChild(exampleIFrame);
+                exampleIFrame.addEventListener('load', () => {
+                  resolve(
+                    exampleIFrame.contentWindow.document.title === pageTitle
+                  );
+                });
+              });
+
+              // Give 10 seconds for the IFrame to load before manually checking.
+              const timeout = new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve(
+                    exampleIFrame.contentWindow.document.title === pageTitle
+                  );
+                }, 10000);
+              });
+
+              exampleIFrame.src = url;
+              exampleIFrame.style.display = 'none';
+              return await Promise.race([waitForDocument, timeout]);
+            };
+
+            results[1].sjTestPassed =
+              !!results[0].scramjet.indexOf(errorPrefix) &&
+              (await testGeneratedUrlHacky(results[0].scramjet));
+          } catch (e) {
+            results[0].scramjet = errorPrefix + ': ' + e.message;
+          }
+
+          return results;
+        },
+        { generatedUrl, pageTitle: website.title }
+      );
+
+      console.log('Scramjet test results:', testResults[0]);
+      const sjTestPassed =
+        testResults[0].scramjet &&
+        testResults[0].scramjet !== 'failure' &&
+        testResults[1].sjTestPassed;
+      console.log(
+        'Scramjet test result:',
+        sjTestPassed ? 'success' : 'failure'
+      );
+      return sjTestPassed;
+    };
+
+    // Run tests for Ultraviolet and Scramjet.
     await page.goto('http://localhost:8080/');
     const ultravioletPassed = await testUltraviolet();
+    const scramjetPassed = await testScramjet();
 
-    if (ultravioletPassed) {
+    if (ultravioletPassed && scramjetPassed) {
       console.log('Tests passed.');
       process.exitCode = 0;
     } else {
