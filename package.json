@@ -32,22 +32,22 @@
   "dependencies": {
     "@fastify/helmet": "^13.0.2",
     "@fastify/static": "^9.1.3",
-    "@mercuryworkshop/bare-mux": "^2.1.8",
+    "@mercuryworkshop/bare-mux": "^2.1.9",
     "@mercuryworkshop/epoxy-transport": "^2.1.28",
-    "@mercuryworkshop/libcurl-transport": "^1.5.1",
+    "@mercuryworkshop/libcurl-transport": "^1.5.2",
     "@mercuryworkshop/scramjet": "^1.1.0",
     "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
-    "axios": "^1.13.5",
+    "axios": "^1.16.1",
     "chii": "^1.15.5",
     "fastify": "^5.8.5",
-    "mrrowisp": "^3.1.2",
+    "mrrowisp": "^3.1.6",
     "pm2": "^7.0.1",
     "utf-8-validate": "^6.0.6",
-    "ws": "^8.19.0"
+    "ws": "^8.21.0"
   },
   "devDependencies": {
-    "@babel/node": "^7.29.0",
-    "esbuild": "^0.27.3",
-    "playwright": "^1.49.0"
+    "@babel/node": "^7.29.7",
+    "esbuild": "^0.27.7",
+    "playwright": "^1.60.0"
   }
 }
