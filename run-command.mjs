@@ -114,7 +114,7 @@ commands: for (let i = 2; i < process.argv.length; i++)
           console.log('[Stop]', stdout);
         });
       // Do not continue executing commands since the server was unable to be stopped.
-      // Mostly implemented to prevent duplicating Node instances with npm restart.
+      // Mostly implemented to prevent duplicating Node instances with pnpm restart.
       if (hasErrored) {
         process.exitCode = 1;
         break commands;
@@ -273,31 +273,6 @@ commands: for (let i = 2; i < process.argv.length; i++)
       rmSync(distFinal, { force: true, recursive: true });
       renameSync(dist, distFinal);
 
-      break;
-    }
-
-    // Delete all files in target locations. This is primarily used to manage
-    // Rammerhead's cache output.
-    case 'clean': {
-      // If including Rammerhead sessions, be careful to not let the global
-      // autocomplete session be deleted without restarting the server.
-      const targetDirs = ['./lib/rammerhead/cache-js'];
-      for (const targetDir of targetDirs)
-        try {
-          const targetPath = fileURLToPath(new URL(targetDir, import.meta.url));
-          rmSync(targetPath, { force: true, recursive: true });
-          mkdirSync(targetPath);
-          writeFileSync(
-            fileURLToPath(new URL(targetDir + '/.gitkeep', import.meta.url)),
-            ''
-          );
-          console.log(
-            '[Clean]',
-            `Reset folder ${targetDir} at ${new Date().toISOString()}.`
-          );
-        } catch (e) {
-          console.error('[Clean Error]', e);
-        }
       break;
     }
 

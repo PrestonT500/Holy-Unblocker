@@ -4,25 +4,23 @@
   "repository": "https://github.com/QuiteAFancyEmerald/InvisiProxy",
   "description": "InvisiProxy LTS is a web proxy service that helps you access websites that may be blocked by your network, government or policy all within your browser with no download or setup.",
   "main": "backend.js",
-  "engines": {
-    "node": "20.x"
-  },
   "scripts": {
-    "fresh-install": "npm cache verify && npm update && npm ci && cd lib/rammerhead && npm ci",
-    "fresh-start": "npm run fresh-install && npm start",
-    "start": "npm stop && npm run build && npm run manual-start",
+    "fresh-install": "pnpm update && pnpm ci",
+    "fresh-start": "pnpm run fresh-install && pnpm start",
+    "start": "pnpm stop && pnpm run build && pnpm run manual-start",
     "restart": "node run-command.mjs stop start",
     "stop": "node run-command.mjs stop",
-    "test": "npm run proxy-validator",
+    "test": "pnpm run proxy-validator",
     "manual-start": "node run-command.mjs start",
     "kill": "node run-command.mjs stop kill",
     "fetch-adblock": "curl -o views/assets/txt/blacklist.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/pro.txt",
-    "build": "node run-command.mjs build && cd lib/rammerhead && npm run build",
+    "build": "node run-command.mjs build",
     "clear": "node run-command.mjs clean",
     "clean": "node run-command.mjs clean format",
     "proxy-validator": "node proxyServiceValidator.js",
     "workflow-test": "node run-command.mjs workflow",
-    "deployment": "npm install && npm run build && node backend.js"
+    "deployment": "pnpm install && pnpm run build && node backend.js",
+    "postinstall": "playwright install chromium"
   },
   "keywords": [
     "proxy",
@@ -30,26 +28,26 @@
     "unblocker"
   ],
   "author": "TitaniumNetwork",
-  "license": "GNU AFFERO",
+  "license": "AGPL-3.0-only",
   "dependencies": {
     "@fastify/helmet": "^13.0.2",
     "@fastify/static": "^9.1.3",
     "@mercuryworkshop/bare-mux": "^2.1.8",
     "@mercuryworkshop/epoxy-transport": "^2.1.28",
     "@mercuryworkshop/libcurl-transport": "^1.5.1",
-    "@mercuryworkshop/scramjet": "https://github.com/MercuryWorkshop/scramjet/releases/download/v1.1.0/mercuryworkshop-scramjet-1.1.0.tgz",
+    "@mercuryworkshop/scramjet": "^1.1.0",
     "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
     "axios": "^1.13.5",
     "chii": "^1.15.5",
     "fastify": "^5.8.5",
     "mrrowisp": "^3.1.2",
     "pm2": "^7.0.1",
-    "puppeteer": "^24.37.2",
     "utf-8-validate": "^6.0.6",
     "ws": "^8.19.0"
   },
   "devDependencies": {
     "@babel/node": "^7.29.0",
-    "esbuild": "^0.27.3"
+    "esbuild": "^0.27.3",
+    "playwright": "^1.49.0"
   }
 }

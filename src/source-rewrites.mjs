@@ -18,7 +18,7 @@ export { paintSource as default };
 
 /* Below are lots of function definitions used to obfuscate the website.
  * This makes the website harder to properly categorize, as its source code
- * changes with each time it is compiled using npm run build.
+ * changes with each time it is compiled using pnpm run build.
  *
  * For customizing source code transformation and more, see the config.json file.
  * For automatically recompiling in production mode, see ecosystem.config.js.

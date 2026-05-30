@@ -85,8 +85,7 @@
     "Tor": ["T*o*r"],
     "Onion": ["O*n*i*o*n"],
     "Ultraviolet": ["Ul*t*ra*vi*o*le*t"],
-    "Scramjet": ["Sc*r*a*m*j*e*t"],
-    "Rammerhead": ["Ra*m*m*e*r*h*e*a*d"]
+    "Scramjet": ["Sc*r*a*m*j*e*t"]
   },
   "splash": [
     "{{mask}}{{This version is the public build of the Invisi LTS project, and it's being worked on via the master branch! Stuff will NOT work!}}"
