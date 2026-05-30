@@ -114,7 +114,8 @@ const wisp = new Mrrowisp({
   },
 });
 
-wisp.start(2);
+// Modify for parallel instances
+wisp.start(1);
 
 // The server will check for the existence of this file when a shutdown is requested.
 // The shutdown script in run-command.js will temporarily produce this file.
