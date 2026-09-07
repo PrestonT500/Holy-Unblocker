@@ -173,8 +173,8 @@ commands: for (let i = 2; i < process.argv.length; i++)
                 import.meta.url
               )
             );
-          if (fileStats.isFile() && !existsSync(targetPath))
-            if (/\.(?:html|js|css|json|txt|xml)$/.test(file) && applyRewrites)
+          if (fileStats.isFile() && !existsSync(targetPath)) {
+            if (/\.(?:html|js|css|json|txt|xml)$/.test(file) && applyRewrites) {
               writeFileSync(
                 targetPath,
                 paintSource(
@@ -183,8 +183,13 @@ commands: for (let i = 2; i < process.argv.length; i++)
                   )
                 )
               );
-            else copyFileSync(base + dir + '/' + file, targetPath);
-          else if (fileStats.isDirectory()) {
+              if (config.verbose) {
+                console.log(`[Build] Compiling file "${file}" from ${base + dir + '/'} to ${targetPath}`);
+              }
+            } else {
+              copyFileSync(base + dir + '/' + file, targetPath);
+            }
+          } else if (fileStats.isDirectory()) {
             if (!existsSync(targetPath)) mkdirSync(targetPath);
             compile(file, base + dir + '/', outDir, initialDir, applyRewrites);
             if (config.verbose){
