@@ -55,7 +55,8 @@ View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish t
 | Spotify                    | Bypass regional proxy blocks by swapping regions or enabling Tor                                                                      |
 | And essentially most sites! | Built for intensive production loads and ease of setup                                                                                |
 
-<img src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/preview/invisi-v6.9.6-preview.png"></img>
+<img src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/preview/invisi-v6.9.6-preview.png"></img> 
+# Note to QuiteAFancyEmerald i added an updated image in the preview folder its called invisi-v7.0.2-preview.png. make sure to delete this message
 <img src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/preview/invisi-v6.9.7-preview-settings.png"></img>
 
 ## Deploy InvisiProxy
@@ -247,7 +248,7 @@ Every other localized changes for source randomization, auto-minify, etc. are lo
 - `production`: Utilize a pre-configured production setup for server hosting. Automatically has cache control and source rewrites setup.
 - `disguiseFiles`: Enable DOM masquerading which obfuscates real the real content fetches for InvisiLTS. This is done through disguising requests, decompressing and then reconstructing the DOM tree.
 - `usingSEO`: Enable Source Randomization which randomizes the source by swapping chunks of data specified in `./src/data.json`. Highly useful for masking keywords that will automatically flag or block InvisiProxy LTS as well as preventing source blocks.
-- `verbose`: Enables compiling messages to see progress and possible issues while compiling.
+- `verbose`: Enables compiling and building messages to see progress and possible issues while compiling.
 #### Tor/Onion/SOCKS5 Routing Setup
 
 You need to setup Tor (no GUI need/GUI is alright. With GUI replace port 9050 with 9150) in order for the Onion Routing setting to work!
