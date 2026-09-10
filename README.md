@@ -55,7 +55,7 @@ View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish t
 | Spotify                    | Bypass regional proxy blocks by swapping regions or enabling Tor                                                                      |
 | And essentially most sites! | Built for intensive production loads and ease of setup                                                                                |
 
-<img src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/preview/invisi-v7.0.2-preview.png"></img> 
+<img src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/preview/invisi-v7.0.2-preview.png"> </img>
 <img src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/preview/invisi-v6.9.7-preview-settings.png"></img>
 
 ## Deploy InvisiProxy
