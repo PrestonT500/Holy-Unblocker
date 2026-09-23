@@ -2,7 +2,7 @@
 
 <img align="left" width="40px" src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/logo_github.png"></img>
 
-# InvisiProxy LTS (v6.x.x)
+# InvisiProxy LTS (v7.x.x)
 #### Formerly Holy Unblocker LTS
 
 ![GitHub Actions Status](https://github.com/QuiteAFancyEmerald/InvisiProxy/workflows/CI-Production/badge.svg)
@@ -16,7 +16,7 @@
 ## You can support InvisiProxy by starring the repository!
 
 This project serves mostly as a proof of concept for the ideal clientless solution to bypassing censorship. A good use case of this project would be if you ever needed a clientless solution to use Tor or leave minimal traces of device activity. Simply host this project on any domain and have an alternative solution to a VPN without needing to download anything on said device. Being a secure web proxy service, it supports numerous sites while being updated frequently and concentrating on being easy to self-host. InvisiProxy LTS works with a large number of sites, including YouTube, ChatGPT, Discord, GeForce NOW and more!
-Also has a good amount of locally hosted games featured on the site.
+Also has a good amount of exclusive features compared to other web proxies in terms of bypassing web filters and global censorship from countries.
 
 #### Over 30M+ users since 2020. Thank you so much for the support I could have never imagined how massive the web proxy community has become.
 
@@ -50,10 +50,10 @@ View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish t
 | Discord                    | Tab title + icon customization using the Settings Menu for improved browsing history stealth                                          |
 | Instagram                  | Adblocking support across all websites while surfing and low latency DNS on official servers                                          |
 | Reddit                     | SOCKS5 and Onion routing support with Tor within the Settings Menu. Use Tor/Onion sites in any browser!                               |
-| GeForce NOW                | Game library with moderately decent titles and open-source emulation projects                                                         |
+| GeForce NOW                | Exclusive features compared to other web proxies in terms of bypassing web filters and global censorship from countries.              |
 | ChatGPT                    | Local browsing history hidden, tab leak prevention and network traffic is obscured!                                                   |
 | Spotify                    | Bypass regional proxy blocks by swapping regions or enabling Tor                                                                      |
-| And essentially most sites! | Built for intensive production loads and ease of setup                                                                                |
+| And essentially most sites!| Built for intensive production loads and ease of setup                                                                               |
 
 <img src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/preview/invisi-v7.0.2-preview.png"> </img>
 <img src="https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/preview/invisi-v6.9.7-preview-settings.png"></img>
@@ -110,7 +110,6 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
     - [TOR Routing](#toronionsocks5-routing-setup)
     - [Proxy](#proxy-configuration)
     - [Client Navigation](#client-navigation-configuration)
-    - [Games Management](#games-management)
   - [Structure](#structure)
     - [Structure Information](#structure-information)
     - [Static Files](#details-of-views)
@@ -192,8 +191,9 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-nvm install 20
-nvm use 20
+# 26 or latest
+nvm install 26
+nvm use 26
 ```
 https://github.com/nvm-sh/nvm
 https://docs.titaniumnetwork.org/guides/nginx/
@@ -282,14 +282,14 @@ The primary location for tweaking any web proxy related settings assigned via th
 
 #### Client Navigation Configuration
 
-The primary location for any client side navigation scripts is `./views/assets/js/common.js`. This file is primary used for Omnibox (Search Engine) functionality, swapping proxy options and linking games.
+The primary location for any client side navigation scripts is `./views/assets/js/common.js`. This file is primary used for Omnibox (Search Engine) functionality, swapping proxy options and other client settings.
 
 - `getDomain`: This constant is used for specifying any subdomains to remove when appending a URL into the omnibox.
 - `goFrame`: This specifies the stealth frame used for InvisiProxy LTS
 - `sx`: This constant specifies the search engine you want to be proxied whenever a user types something in that isn't a URL
 - `search/uvUrl/sjUrl`: These functions specify and parse the queries used for submitted URLs
 - `urlHandler/asyncUrlHandler`: Used to set functions for the goProx object.
-- `goProx`: This constant allows for the mapping of URL handling for specific proxies, games or links that need to fall under a web proxy.
+- `goProx`: This constant allows for the mapping of URL handling for specific proxies or links that need to fall under a web proxy.
 
 ```js
 const goProx = Object.freeze({
@@ -318,17 +318,7 @@ prSet('pr-yt', 'youtube');
 prSet('pr-example', 'example');
 ```
 
-- `huLinks/navLists`: Automatically takes paths stated in `./views/assets/json` and appends them depending on the page and usage. This is used for hiding links that would lead to filter blocks and create an easier system for adding games.
-
-#### Games Management
-
-As stated above all game links that need to be appended to a page (including images and descriptions) are managed via the nav files in`./views/assets/json`. 
-
-Download the latest release <a href="https://github.com/QuiteAFancyEmerald/InvisiProxy/blob/master/views/GAMES.md">here</a> and extract it within a folder called `/views/archive`.
-
-- `views/archive/g`: Contains any local or external HTML5/web games.
-- `views/archive/gfiles/flash`: Contains Ruffle (an Adobe Flash emulator) and a collection of flash games linked to an external CDN.
-- `views/archive/gfiles/rarch`: Contains webretro which is a project that ports RetroArch to WASM. Supports many systems like GBA, N64, etc; ROMS are NOT INCLUDED.
+- `huLinks/navLists`: Automatically takes paths stated in `./views/assets/json` and appends them depending on the page and usage. This is used for hiding links that would lead to filter blocks and create an easier system for adding apps.
 
 ## Structure
 
@@ -380,7 +370,7 @@ This is an example of DNS records. Self-hosting will require `A records` prefera
 <img src="https://raw.githubusercontent.com/titaniumnetwork-dev/InvisiProxy/master/views/assets/img/dnssetup.png" width="500"></img>
 
 - `@` and `www.example.com` are being used for InvisiProxy LTS.
-- `a.example.com` is being used for other instances like Libreddit, Invidious or web ported games depending on what the site maintainer needs.
+- `a.example.com` is being used for other instances like Libreddit or Invidious depending on what the site maintainer needs.
 
 As stated previously, InvisiProxy is hosted locally with Scramjet and Ultraviolet out of the box. No need for external instances.
 
@@ -446,7 +436,7 @@ Use the same steps above by running `pnpm install` in your repository and adding
 
 #### Where can I find the games for this repo? (404 errors, etc.)
 
-Due to piracy concerns, size, etc. this has been moved over <a href="https://github.com/QuiteAFancyEmerald/HU-Archive">here</a>. EmuLibrary is not featured in the public version.
+Please read over <a href="https://github.com/QuiteAFancyEmerald/InvisiProxy/blob/master/views/GAMES.md">here</a>.
 
 **Why is the site I am on not working correctly or having CAPTCHA errors?**
 
