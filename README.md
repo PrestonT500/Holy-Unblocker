@@ -163,7 +163,7 @@ pnpm run test
 
 This website is hosted locally with [Scramjet](https://github.com/MercuryWorkshop/Scramjet), [Ultraviolet](https://github.com/TitaniumNetwork-Dev/Ultraviolet), [Wisp](https://github.com/MercuryWorkshop/Wisp-Protocol), [Bare-Mux](https://github.com/MercuryWorkshop/Bare-Mux), [EpoxyTransport](https://github.com/MercuryWorkshop/Epoxy-Transport), and [LibcurlTransport](https://github.com/MercuryWorkshop/Libcurl-Transport) built-in.
 
-### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to mrrowisp using loopbacks.
+### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to wispurr using loopbacks. If using Caddy disable this feature or adjust your default Caddy config.
 
 #### Detailed Setup (Ubuntu Example)
 You will need `Node.js 20.x`, `curl` and `git` installed; below is an example for Debian/Ubuntu setup.
@@ -494,7 +494,7 @@ View the official website for more detail and credits.
 
 This project currently uses Scramjet and Ultraviolet as web proxies adhering to the Wisp protocol. Bare-Mux is utilized for swapping transport systems to be utilized with Wisp. The included transport systems are EpoxyTransport and libcurl-transport.
 
-- <a href="https://github.com/soap-phia/mrrowisp">mrrowisp</a>
+- <a href="https://github.com/sylvieisnton/wispurr">wispurr</a>
 - <a href="https://github.com/MercuryWorkshop/scramjet">Scramjet</a>
 - <a href="https://github.com/titaniumnetwork-dev/Ultraviolet">Ultraviolet</a>
 - <a href="https://github.com/MercuryWorkshop/wisp-protocol">Wisp Protocol</a>
